@@ -37,7 +37,8 @@ sources:
             data_type: varchar
             tests:
             - accepted_values:
-                values: ['Male', 'Female', 'Non-binary']
+                arguments:
+                  values: ['Male', 'Female', 'Non-binary', 'Unknown']
           - name: city
             data_type: varchar
           - name: age
@@ -95,7 +96,8 @@ sources:
             tests:
               - not_null
               - accepted_values:
-                  values: ['Failed', 'Completed', 'Refunded', 'Pending']
+                  arguments:
+                    values: ['Failed', 'Completed', 'Refunded', 'Pending']
           - name: payment_amount
             data_type: number
           - name: order_date
@@ -128,7 +130,8 @@ sources:
             tests:
               - not_null
               - accepted_values:
-                  values: ['Pro', 'Elite', 'Family', 'Basic']
+                  arguments:
+                    values: ['Pro', 'Elite', 'Family', 'Basic']
           - name: start_date
             data_type: date
             tests:
@@ -140,7 +143,8 @@ sources:
             tests:
               - not_null
               - accepted_values:
-                  values: ['Active', 'Expired', 'Cancelled', 'Pending']
+                  arguments:
+                    values: ['Active', 'Expired', 'Cancelled', 'Pending']
           - name: monthly_price
             data_type: number
             tests:
@@ -154,7 +158,8 @@ sources:
             tests:
               - not_null
               - accepted_values:
-                  values: ['Complete', 'Failed', 'Pending']
+                  arguments:
+                    values: ['Complete', 'Failed', 'Pending']
 
       - name: raw_activity_logs
         description: "Tabla con los datos en bruto de actividad"
