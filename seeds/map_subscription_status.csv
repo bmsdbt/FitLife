@@ -1,0 +1,8 @@
+raw_subscription_status,clean_subscription_status
+active,Active
+activo,Active
+pending,Pending
+cancelled,Cancelled
+cancel,Cancelled
+expired,Expired
+expire,Expired

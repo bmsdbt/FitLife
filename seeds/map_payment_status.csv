@@ -1,0 +1,9 @@
+raw_payment_status,clean_payment_status
+complete,Completed
+completed,Completed
+pending,Pending
+pnding,Pending
+fail,Failed
+failed,Failed
+refund,Refunded
+refunded,Refunded
