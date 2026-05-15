@@ -1,0 +1,241 @@
+version: 2
+       
+models:
+  - name: stg_users
+    description: "Datos limpios e iniciales de los usuarios registrados en la plataforma."
+    columns:
+      - name: user_id
+        data_type: number
+        description: "Identificador único y clave primaria del usuario."
+        tests:
+          - unique
+          - not_null
+       
+      - name: user_name
+        data_type: varchar
+        description: "Nombre de usuario registrado."
+        tests:
+          - unique
+          - not_null
+       
+      - name: email
+        data_type: varchar
+        description: "Dirección de correo electrónico del usuario."
+        tests:
+          - not_null
+       
+      - name: gender
+        data_type: varchar
+        description: "Género con el que se identifica el usuario."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Male', 'Female', 'Non-binary', 'Unknown']
+       
+      - name: city
+        data_type: varchar
+        description: "Ciudad de residencia del usuario."
+       
+      - name: age
+        data_type: number
+        description: "Edad actual del usuario."
+       
+      - name: registration_at
+        data_type: date
+        description: "Fecha en la que el usuario se registró en la plataforma."
+        tests:
+          - not_null
+       
+  - name: stg_orders
+    description: "Historial de pedidos y compras realizadas por los usuarios."
+    columns:
+      - name: order_id
+        data_type: number
+        description: "Identificador único y clave primaria del pedido."
+        tests:
+          - unique
+          - not_null
+       
+      - name: user_id
+        data_type: number
+        description: "Clave foránea que conecta con el usuario que realizó el pedido."
+        tests:
+              - not_null
+
+      - name: payment_method
+        data_type: varchar
+        description: "Método de pago utilizado."
+        tests:
+          - not_null
+       
+      - name: payment_status
+        data_type: varchar
+        description: "Estado del pago de la orden."
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['Failed', 'Completed', 'Refunded', 'Pending']
+       
+      - name: payment_amount
+        data_type: number
+        description: "Cantidad total pagada por el pedido."
+       
+      - name: order_date
+        data_type: date
+        description: "Fecha en la que se efectuó la compra."
+        tests:
+          - not_null
+       
+      - name: product_category
+        data_type: varchar
+        description: "Categoría a la que pertenece el producto comprado."
+        tests:
+          - not_null
+       
+      - name: quantity
+        data_type: number
+        description: "Cantidad de productos incluidos en el pedido."
+        tests:
+          - not_null
+       
+  - name: stg_subscriptions
+    description: "Información sobre los planes de suscripción contratados por los usuarios."
+    columns:
+      - name: subscription_id
+        data_type: number
+        description: "Identificador único de la suscripción."
+        tests:
+          - unique
+          - not_null
+       
+      - name: user_id
+        data_type: number
+        description: "Clave foránea que vincula la suscripción con el usuario."
+        tests:
+          - not_null
+       
+      - name: plan_name
+        data_type: varchar
+        description: "Nombre del plan de suscripción."
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['Pro', 'Elite', 'Family', 'Basic']
+       
+      - name: start_date
+        data_type: date
+        description: "Fecha de inicio de la suscripción activa."
+        tests:
+          - not_null
+       
+      - name: end_date
+        data_type: date
+        description: "Fecha de finalización de la suscripción."
+       
+      - name: status
+        data_type: varchar
+        description: "Estado actual de la suscripción"
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['Active', 'Expired', 'Cancelled', 'Pending']
+       
+      - name: monthly_price
+        data_type: number
+        description: "Precio mensual cobrado por el plan actual."
+        tests:
+          - not_null
+       
+      - name: payment_method
+        data_type: varchar
+        description: "Método de pago asociado a la suscripción."
+        tests:
+          - not_null
+       
+      - name: payment_status
+        data_type: varchar
+        description: "Estado del último cobro de la suscripción."
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['Completed', 'Failed', 'Pending']
+       
+  - name: stg_activity_logs
+    description: "Registro de actividades físicas realizadas por los usuarios."
+    columns:
+      - name: activity_id
+        data_type: number
+        description: "Identificador único de la sesión de actividad."
+        tests:
+          - unique
+          - not_null
+       
+      - name: user_id
+        data_type: number
+        description: "Clave foránea del usuario que realizó la actividad."
+        tests:
+          - not_null
+       
+      - name: activity_type
+        data_type: varchar
+        description: Tipo de actividad realizada"
+        tests:
+          - not_null
+       
+      - name: duration_minutes
+        data_type: number
+        description: "Duración total de la actividad medida en minutos."
+        tests:
+          - not_null
+       
+      - name: calories_burned
+        data_type: number
+        description: "Cantidad de calorías quemadas durante la actividad."
+       
+      - name: activity_date
+        data_type: date
+        description: "Fecha en la que se llevó a cabo el entrenamiento."
+        tests:
+          - not_null
+       
+  - name: stg_user_sessions
+    description: "Métricas de comportamiento y sesiones de inicio de sesión de los usuarios en la aplicación."
+    columns:
+      - name: session_id
+        data_type: number
+        description: "Identificador único de la sesión web o móvil."
+        tests:
+          - unique
+          - not_null
+       
+      - name: user_id
+        data_type: number
+        description: "Clave foránea del usuario que inició la sesión."
+        tests:
+          - not_null
+       
+      - name: login_date
+        data_type: date
+        description: "Fecha del inicio de sesión (login)."
+        tests:
+          - not_null
+       
+      - name: device_type
+        data_type: varchar
+        description: "Tipo de dispositivo desde el que se accedió"
+       
+      - name: app_version
+        data_type: varchar
+        description: "Versión de la aplicación utilizada durante la sesión."
+        tests:
+          - not_null
+       
+      - name: session_duration_seconds
+        data_type: number
+        description: "Duración de la sesión de usuario medida en segundos."
+        tests:
+          - not_null

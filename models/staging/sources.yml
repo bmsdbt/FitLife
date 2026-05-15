@@ -159,7 +159,7 @@ sources:
               - not_null
               - accepted_values:
                   arguments:
-                    values: ['Complete', 'Failed', 'Pending']
+                    values: ['Completed', 'Failed', 'Pending']
 
       - name: raw_activity_logs
         description: "Tabla con los datos en bruto de actividad"
