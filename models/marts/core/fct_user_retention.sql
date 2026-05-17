@@ -30,12 +30,9 @@ session_data as (
         us.session_duration_seconds,
         ps.sk_subscription,
         ps.status,
-        -- Días desde el último login para ver si hay abandono
-        DATEDIFF('day', us.login_date, CURRENT_DATE()) as days_since_login,
-         -- is_churned combinando sesión y estado suscripción
-         CASE
+         -- is_churned = estado suscripción
+        CASE
             WHEN ps.status IN ('Cancelled', 'Expired')
-                OR DATEDIFF('day', us.login_date, CURRENT_DATE()) > 30
                 THEN TRUE
                 ELSE FALSE
             END AS is_churned
@@ -57,7 +54,6 @@ final as (
         sd.device_type,
         sd.session_duration_seconds,
         sd.app_version,
-        sd.days_since_login,
         sd.is_churned
     from session_data sd 
     left join dim_date d on sd.login_date = d.date_actual
