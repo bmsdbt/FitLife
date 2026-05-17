@@ -1,7 +1,6 @@
 WITH source AS (
     SELECT * FROM {{ source('dev_raw_bronze', 'raw_subscriptions') }}
 ),
-
 -- Cargamos todas las seeds necesarias
 plan_name_map AS (
     SELECT * FROM {{ ref('map_plan_name') }}
@@ -24,7 +23,13 @@ renamed as (
         CAST(s.start_date AS DATE) AS start_date,
         CAST(s.end_date AS DATE) AS end_date,
         COALESCE(ss.clean_subscription_status, INITCAP(s.status)) AS status,
-        CAST(REPLACE(s.monthly_price, ',', '.') AS numeric(5,2)) AS monthly_price,
+        CASE plan_name
+            WHEN 'Basic'  THEN 9.99
+            WHEN 'Pro'    THEN 19.99
+            WHEN 'Elite'  THEN 39.99
+            WHEN 'Family' THEN 29.99 
+            ELSE ABS(CAST(REPLACE(s.monthly_price, ',', '.') AS numeric(5,2)))
+        END AS monthly_price,
         COALESCE(pm.clean_payment_method, INITCAP(s.payment_method)) AS payment_method,
         COALESCE(ps.clean_payment_status, s.payment_status) AS payment_status
 

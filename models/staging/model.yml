@@ -182,7 +182,7 @@ models:
        
       - name: activity_type
         data_type: varchar
-        description: Tipo de actividad realizada"
+        description: "Tipo de actividad realizada"
         tests:
           - not_null
        

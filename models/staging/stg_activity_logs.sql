@@ -13,7 +13,7 @@ renamed as (
         -- Para HIIT solemos usar mayúsculas, para el resto Initcap.
         CASE 
             WHEN LOWER(TRIM(s.activity_type)) IN ('hiit', 'h.i.i.t') THEN 'HIIT'
-            ELSE COALESCE(tp.clean_activity_type, INITCAP(s.activity_type))
+            ELSE COALESCE(am.clean_activity_type, INITCAP(s.activity_type))
         END AS activity_type,
         -- Limpieza de valores imposibles. Si es negativo o mayor a 12 horas (720 min), lo ponemos a NULL o 0 para no sesgar
         CASE 
@@ -28,8 +28,8 @@ renamed as (
         CAST(s.activity_date AS DATE) AS activity_date
 
     FROM source s
-    LEFT JOIN activity_map tp
-        ON LOWER(TRIM(s.activity_type)) = tp.raw_activity_type
+    LEFT JOIN activity_map am
+        ON LOWER(TRIM(s.activity_type)) = am.raw_activity_type
 )
 
 select * from renamed
