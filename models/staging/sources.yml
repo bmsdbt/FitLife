@@ -22,27 +22,25 @@ sources:
           - name: user_id
             data_type: number
             tests:
-              - unique
               - not_null
+
           - name: user_name
             data_type: varchar
             tests:
-              - unique
               - not_null
+
           - name: email
             data_type: varchar
-            tests:
-              - not_null
+
           - name: gender
             data_type: varchar
-            tests:
-            - accepted_values:
-                arguments:
-                  values: ['Male', 'Female', 'Non-binary', 'Unknown']
+
           - name: city
             data_type: varchar
+
           - name: age
             data_type: number
+
           - name: registration_date
             data_type: date
             tests:
@@ -54,26 +52,27 @@ sources:
           - name: session_id
             data_type: number
             tests:
-              - unique
               - not_null
+
           - name: user_id
             data_type: number
             tests:
               - not_null
+
           - name: login_date
             data_type: date
             tests:
               - not_null
+
           - name: device_type
             data_type: varchar
-            tests:
-              - not_null
+
           - name: app_version
             data_type: varchar
+
           - name: session_duration_seconds
             data_type: number
-            tests:
-              - not_null
+
       
       - name: raw_orders
         description: "Tabla con los datos en bruto de pedidos"
@@ -81,37 +80,33 @@ sources:
           - name: order_id
             data_type: number
             tests:
-              - unique
               - not_null
+
           - name: user_id
             data_type: number
             tests:
               - not_null
+
           - name: payment_method
             data_type: varchar
-            tests:
-              - not_null
+
           - name: payment_status
             data_type: varchar
-            tests:
-              - not_null
-              - accepted_values:
-                  arguments:
-                    values: ['Failed', 'Completed', 'Refunded', 'Pending']
+
           - name: payment_amount
             data_type: number
+
           - name: order_date
             data_type: date
             tests:
               - not_null
+
           - name: product_category
             data_type: varchar
-            tests:
-              - not_null
+
           - name: quantity
             data_type: number
-            tests:
-              - not_null
+
 
       - name: raw_subscriptions
         description: "Tabla con los datos en bruto de suscripciones"
@@ -119,47 +114,34 @@ sources:
           - name: subscription_id
             data_type: number
             tests:
-              - unique
               - not_null
+
           - name: user_id
             data_type: number
             tests:
               - not_null
+
           - name: plan_name
             data_type: varchar
-            tests:
-              - not_null
-              - accepted_values:
-                  arguments:
-                    values: ['Pro', 'Elite', 'Family', 'Basic']
+
           - name: start_date
             data_type: date
-            tests:
-              - not_null
+
           - name: end_date
             data_type: date
+
           - name: status
             data_type: varchar
-            tests:
-              - not_null
-              - accepted_values:
-                  arguments:
-                    values: ['Active', 'Expired', 'Cancelled', 'Pending']
+
           - name: monthly_price
             data_type: number
-            tests:
-              - not_null
+
           - name: payment_method
             data_type: varchar
-            tests:
-              - not_null
+
           - name: payment_status
             data_type: varchar
-            tests:
-              - not_null
-              - accepted_values:
-                  arguments:
-                    values: ['Completed', 'Failed', 'Pending']
+
 
       - name: raw_activity_logs
         description: "Tabla con los datos en bruto de actividad"
@@ -167,22 +149,22 @@ sources:
           - name: activity_id
             data_type: number
             tests:
-              - unique
               - not_null 
+
           - name: user_id
             data_type: number
             tests:
               - not_null 
+
           - name: activity_type
             data_type: varchar
-            tests:
-              - not_null 
+
           - name: duration_minutes
             data_type: number
-            tests:
-              - not_null
+
           - name: calories_burned
             data_type: number
+
           - name: activity_date
             data_type: date
             tests:

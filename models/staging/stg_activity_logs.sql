@@ -24,7 +24,7 @@ renamed as (
         END AS duration_minutes,
         --Limpieza de negativos para las calorias también
         CASE 
-            WHEN s.calories_burned < 0 THEN 0 
+            WHEN s.calories_burned IS NULL OR s.calories_burned < 0 THEN 0 
             ELSE s.calories_burned 
         END AS calories_burned,
         CAST(s.activity_date AS DATE) AS activity_date

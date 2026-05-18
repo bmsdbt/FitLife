@@ -34,7 +34,7 @@ activity_data as (
 --CTE final para unir con dimensiones y generar SK
 final as (
     select
-        {{ dbt_utils.generate_surrogate_key(['ad.user_id', 'ad.activity_id', 'ad.activity_date'])}} as sk_activity,
+        {{ dbt_utils.generate_surrogate_key(['ad.activity_id'])}} as sk_activity,
         u.sk_user,
         d.sk_date,
         ps.sk_subscription,
@@ -48,7 +48,9 @@ final as (
         on ad.user_id = ps.user_id
         and ad.activity_date >= ps.start_date
         and (ad.activity_date <= ps.end_date or ps.end_date is null)
-    
+    --Ponemos esto para matar los duplicados del JOIN
+    qualify row_number() over(partition by ad.activity_id order by ps.start_date desc) = 1
 )
+    
 
 select * from final

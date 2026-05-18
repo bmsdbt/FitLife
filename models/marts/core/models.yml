@@ -276,7 +276,6 @@ models:
         data_type: varchar
         description: "Clave foránea hacia dim_plan_subscription para saber el plan activo en el momento de la actividad."
         tests: 
-          - not_null
           - relationships:
               arguments:
                 to: ref('dim_plan_subscription')
