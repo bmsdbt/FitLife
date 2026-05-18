@@ -98,7 +98,11 @@ models:
         description: "Cantidad de productos incluidos en el pedido."
         tests:
           - not_null
-       
+
+      - name: is_refund
+        data_type: boolean
+        description: "Bandera que indica si la orden es una devolución (TRUE) o una venta normal (FALSE)."
+
   - name: stg_subscriptions
     description: "Información sobre los planes de suscripción contratados por los usuarios."
     columns:
@@ -122,7 +126,7 @@ models:
           - not_null
           - accepted_values:
               arguments:
-                values: ['Pro', 'Elite', 'Family', 'Basic']
+                values: ['Pro', 'Elite', 'Family', 'Basic', 'Unknown']
        
       - name: start_date
         data_type: date
@@ -141,7 +145,7 @@ models:
           - not_null
           - accepted_values:
               arguments:
-                values: ['Active', 'Expired', 'Cancelled', 'Pending']
+                values: ['Active', 'Expired', 'Cancelled', 'Pending', 'Unknown']
        
       - name: monthly_price
         data_type: number
@@ -162,7 +166,7 @@ models:
           - not_null
           - accepted_values:
               arguments:
-                values: ['Completed', 'Failed', 'Pending']
+                values: ['Completed', 'Failed', 'Pending', 'Unknown']
        
   - name: stg_activity_logs
     description: "Registro de actividades físicas realizadas por los usuarios."

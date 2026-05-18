@@ -27,11 +27,12 @@ orders_revenue as (
         o.payment_method,
         o.payment_status,
         o.product_category,
-        NULL as plan_name,
-        NULL as sk_subscription,
+        'N/A' as plan_name,
+        CAST(NULL AS VARCHAR) as sk_subscription, --Es un surrogate key y si se queda null
         o.payment_amount as amount,
         o.quantity,
-        'Order' as revenue_type
+        'Order' as revenue_type,
+        o.is_refund
     from orders o
     where o.payment_status = 'Completed'
 ),
@@ -44,12 +45,13 @@ subscriptions_revenue as (
         ps.start_date AS revenue_date,
         ps.payment_method,
         ps.payment_status,
-        NULL AS product_category,
+        'N/A' AS product_category,
         ps.plan_name,
         ps.sk_subscription,
         ps.monthly_price AS amount,
         1 AS quantity,
-        'Subscription' AS revenue_type
+        'Subscription' AS revenue_type,
+        FALSE AS is_refund
     FROM dim_plan_subscription ps
     WHERE payment_status = 'Completed'
 ),
@@ -70,6 +72,7 @@ final as (
         c.product_category,
         c.source_id,
         c.amount,
+        c.is_refund,
         c.quantity,
         c.revenue_type
     from combined c

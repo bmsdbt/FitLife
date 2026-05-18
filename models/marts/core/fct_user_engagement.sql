@@ -43,8 +43,12 @@ final as (
         ad.calories_burned
     from activity_data ad 
     left join dim_date d on ad.activity_date = d.date_actual
-    left join dim_plan_subscription ps on ad.user_id = ps.user_id
     left join dim_users u on ad.user_id = u.user_id
+    left join dim_plan_subscription ps 
+        on ad.user_id = ps.user_id
+        and ad.activity_date >= ps.start_date
+        and (ad.activity_date <= ps.end_date or ps.end_date is null)
+    
 )
 
 select * from final
