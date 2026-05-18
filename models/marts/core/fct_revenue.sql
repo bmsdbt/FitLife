@@ -54,6 +54,7 @@ subscriptions_revenue as (
         FALSE AS is_refund
     FROM dim_plan_subscription ps
     WHERE payment_status = 'Completed'
+        AND ps.is_current = TRUE 
 ),
 
 combined AS (

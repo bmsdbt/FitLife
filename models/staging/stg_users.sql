@@ -9,8 +9,9 @@ renamed as (
         CASE 
             WHEN UPPER(gender) IN ('M', 'MALE') THEN 'Male'
             WHEN UPPER(gender) IN ('F', 'FEMALE') THEN 'Female'
+            WHEN UPPER(gender) IN ('NB', 'N-B', 'NON-BINARY', 'NON_BINARY') THEN 'Non-Binary'
             WHEN gender IS NULL THEN 'Unknown'
-            ELSE INITCAP(gender) -- Esto arregla 'non-binary' -> 'Non-Binary' o cualquier otro valor
+            ELSE 'Unknown'
         END AS gender,
         COALESCE(initcap(city), 'Unknown') as city,
         case 

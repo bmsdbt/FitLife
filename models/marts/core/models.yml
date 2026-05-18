@@ -104,7 +104,7 @@ models:
         tests:
           - accepted_values:
               arguments:
-                values: ['active', 'expired', 'cancelled', 'pending']
+                values: ['Active', 'Expired', 'Cancelled', 'Pending']
 
       - name: payment_method
         data_type: varchar
@@ -195,8 +195,7 @@ models:
       - name: sk_subscription
         data_type: varchar
         description: "Clave foránea hacia dim_plan_subscription (puede ser nula si el ingreso es de una orden regular)."
-        tests: 
-          - not_null
+        tests:
           - relationships:
               arguments:
                 to: ref('dim_plan_subscription')
@@ -331,9 +330,8 @@ models:
 
       - name: sk_subscription
         data_type: varchar
-        description: "Clave foránea hacia dim_plan_subscription."
-        tests: 
-          - not_null
+        description: "Clave foránea hacia dim_plan_subscription. Puede ser nulo para orders."
+        tests:
           - relationships:
               arguments:
                 to: ref('dim_plan_subscription')

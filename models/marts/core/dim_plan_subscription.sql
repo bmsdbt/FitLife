@@ -3,7 +3,7 @@
 )}}
 
 with source_subscription as(
-    select * from {{ ref('stg_subscriptions') }}
+    select * from {{ ref('snapshot_plan_subscription') }}
 ),
 
 final_subscription as (
@@ -17,7 +17,14 @@ final_subscription as (
         end_date,
         status,
         payment_method,
-        payment_status
+        payment_status,
+        -- Columnas del snapshot para historial
+        dbt_valid_from,
+        dbt_valid_to,
+        -- Si dbt_valid_to es NULL significa que es el registro actual
+        CASE WHEN dbt_valid_to IS NULL THEN TRUE 
+            ELSE FALSE 
+        END AS is_current
     from source_subscription
 )
 

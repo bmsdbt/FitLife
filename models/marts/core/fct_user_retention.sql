@@ -40,8 +40,10 @@ session_data as (
     left join (
         select *,
             row_number() OVER (PARTITION BY user_id ORDER BY start_date DESC) as rn
-        from dim_plan_subscription
-    ) ps on us.user_id = ps.user_id AND ps.rn = 1
+        from dim_plan_subscription 
+        WHERE is_current = TRUE  -- filtra primero los actuales
+    ) ps on us.user_id = ps.user_id 
+        AND ps.rn = 1
 ),
 
 --CTE final para unir con dimensiones y generar SK

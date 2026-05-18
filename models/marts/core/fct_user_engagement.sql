@@ -48,6 +48,7 @@ final as (
         on ad.user_id = ps.user_id
         and ad.activity_date >= ps.start_date
         and (ad.activity_date <= ps.end_date or ps.end_date is null)
+        and ps.is_current = TRUE 
     --Ponemos esto para matar los duplicados del JOIN
     qualify row_number() over(partition by ad.activity_id order by ps.start_date desc) = 1
 )
