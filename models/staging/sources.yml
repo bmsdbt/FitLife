@@ -13,7 +13,7 @@ version: 2
 
 sources:
   - name: dev_raw_bronze
-    database: _DEV_FITLIFE_BRONZE_DB
+    database: "{{ env_var('DBT_ENVIRONMENTS', '_DEV_FITLIFE') }}_BRONZE_DB"
     schema: RAW
 
     tables:
