@@ -35,3 +35,12 @@ models:
       +materialized: table
       +database: "{{ env_var('DBT_ENVIRONMENTS', '_DEV_FITLIFE') }}_GOLD_DB"
       +schema: GOLD
+
+seeds:
+  +schema: seed_data
+  +database: "{{ env_var('DBT_ENVIRONMENTS', '_DEV_FITLIFE') }}_BRONZE_DB"
+
+snapshots:
+  +transient: false
+  +target_database: "{{ env_var('DBT_ENVIRONMENTS', '_DEV_FITLIFE') }}_SILVER_DB"
+  +target_schema: snapshots

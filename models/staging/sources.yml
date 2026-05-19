@@ -15,6 +15,7 @@ sources:
   - name: dev_raw_bronze
     database: _DEV_FITLIFE_BRONZE_DB
     schema: RAW
+
     tables:
       - name: raw_users
         description: "Tabla con los datos en bruto de usuarios"

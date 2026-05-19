@@ -1,5 +1,7 @@
 {{ config(
-    materialized= 'table'
+    materialized= 'incremental',
+    unique_key= 'sk_activity',
+    incremental_strategy='merge'
 )}}
 
 --CTEs de fuentes para cargar las tablas que necesito
@@ -29,6 +31,11 @@ activity_data as (
         al.calories_burned,
         al.activity_date
     from activity_logs al
+
+    -- Filtro para traer los datos nuevos
+    {% if is_incremental() %}
+        where al.activity_date >= (select max(activity_date) from {{ this }})
+    {% endif %}
 ),
 
 --CTE final para unir con dimensiones y generar SK
@@ -40,7 +47,8 @@ final as (
         ps.sk_subscription,
         ad.activity_type,
         ad.duration_minutes,
-        ad.calories_burned
+        ad.calories_burned,
+        ad.activity_date -- Esta columna la añado para soportar el filtro de la incremental
     from activity_data ad 
     left join dim_date d on ad.activity_date = d.date_actual
     left join dim_users u on ad.user_id = u.user_id

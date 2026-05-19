@@ -3,6 +3,10 @@ version: 2
 models:
   - name: dim_date
     description: "Dimensión de tiempo para agrupar y filtrar datos por fechas (días, meses, años, trimestres)."
+    config:
+      contract:
+        enforced: true
+
     columns:
       - name: sk_date
         data_type: varchar
@@ -19,7 +23,7 @@ models:
           - not_null
 
       - name: date_day
-        data_type: number
+        data_type: number(38,0)
         description: "Día del mes."
 
       - name: day_name
@@ -27,11 +31,11 @@ models:
         description: "Nombre del día de la semana."
 
       - name: date_week
-        data_type: number
+        data_type: number(38,0)
         description: "Número de la semana en el año."
 
       - name: date_month
-        data_type: number
+        data_type: number(38,0)
         description: "Número del mes (1-12)."
 
       - name: month_name
@@ -39,15 +43,15 @@ models:
         description: "Nombre del mes."
 
       - name: date_year
-        data_type: number
+        data_type: number(38,0)
         description: "Año de la fecha."
 
       - name: date_quarter
-        data_type: number
+        data_type: number(38,0)
         description: "Trimestre del año (1-4)."
 
       - name: day_of_week
-        data_type: number
+        data_type: number(38,0)
         description: "Número del día de la semana (estándar ISO)."
 
       - name: is_weekend
