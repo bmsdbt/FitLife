@@ -1,0 +1,367 @@
+version: 2
+
+models:
+  - name: dim_date
+    description: "Dimensión de tiempo para agrupar y filtrar datos por fechas (días, meses, años, trimestres)."
+    config:
+      contract:
+        enforced: true
+
+    columns:
+      - name: sk_date
+        data_type: varchar
+        description: "Surrogate key única para la fecha."
+        tests:
+          - unique
+          - not_null
+
+      - name: date_actual
+        data_type: date
+        description: "Fecha en formato estándar YYYY-MM-DD."
+        tests:
+          - unique
+          - not_null
+
+      - name: date_day
+        data_type: number(38,0)
+        description: "Día del mes."
+
+      - name: day_name
+        data_type: varchar
+        description: "Nombre del día de la semana."
+
+      - name: date_week
+        data_type: number(38,0)
+        description: "Número de la semana en el año."
+
+      - name: date_month
+        data_type: number(38,0)
+        description: "Número del mes (1-12)."
+
+      - name: month_name
+        data_type: varchar
+        description: "Nombre del mes."
+
+      - name: date_year
+        data_type: number(38,0)
+        description: "Año de la fecha."
+
+      - name: date_quarter
+        data_type: number(38,0)
+        description: "Trimestre del año (1-4)."
+
+      - name: day_of_week
+        data_type: number(38,0)
+        description: "Número del día de la semana (estándar ISO)."
+
+      - name: is_weekend
+        data_type: boolean
+        description: "Bandera booleana que indica si el día es fin de semana (sábado o domingo)."
+
+  - name: dim_plan_subscription
+    description: "Dimensión que contiene el histórico y detalles de los planes de suscripción de los usuarios."
+    columns:
+      - name: sk_subscription
+        data_type: varchar
+        description: "Surrogate key única para el registro de suscripción."
+        tests:
+          - unique
+          - not_null
+
+      - name: subscription_id
+        data_type: number
+        description: "ID original de la suscripción."
+        tests:
+          - not_null
+
+      - name: user_id
+        data_type: number
+        description: "ID del usuario asociado a la suscripción."
+        tests:
+          - not_null
+
+      - name: plan_name
+        data_type: varchar
+        description: "Nombre del plan contratado."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Pro', 'Elite', 'Family', 'Basic']
+
+      - name: monthly_price
+        data_type: number
+        description: "Precio mensual del plan contratado."
+
+      - name: start_date
+        data_type: date
+        description: "Fecha de inicio de la suscripción."
+        tests:
+          - not_null
+
+      - name: end_date
+        data_type: date
+        description: "Fecha de fin de la suscripción."
+
+      - name: status
+        data_type: varchar
+        description: "Estado actual de la suscripción."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Active', 'Expired', 'Cancelled', 'Pending']
+
+      - name: payment_method
+        data_type: varchar
+        description: "Método de pago utilizado para la suscripción."
+
+      - name: payment_status
+        data_type: varchar
+        description: "Estado del último pago asociado a la suscripción."
+
+  - name: dim_users
+    description: "Dimensión principal con los datos demográficos y de contacto de los usuarios de la plataforma."
+    columns:
+      - name: sk_user
+        data_type: varchar
+        description: "Surrogate key única para el usuario."
+        tests:
+          - unique
+          - not_null
+
+      - name: user_id
+        data_type: number
+        description: "ID original del usuario en el sistema."
+        tests:
+          - unique
+          - not_null
+
+      - name: user_name
+        data_type: varchar
+        description: "Nombre completo o nombre de usuario."
+        tests:
+          - unique
+          - not_null
+
+      - name: email
+        data_type: varchar
+        description: "Dirección de correo electrónico del usuario."
+        tests:
+          - not_null
+
+      - name: gender
+        data_type: varchar
+        description: "Género del usuario."
+
+      - name: city
+        data_type: varchar
+        description: "Ciudad de residencia del usuario."
+
+      - name: age
+        data_type: number
+        description: "Edad del usuario."
+
+      - name: registration_at
+        data_type: date
+        description: "Fecha en la que el usuario se registró en la plataforma."
+        tests:
+          - not_null
+
+  - name: fct_revenue
+    description: "Tabla de hechos transaccional que unifica los ingresos provenientes de compras de productos (orders) y suscripciones."
+    columns:
+      - name: sk_revenue
+        data_type: varchar
+        description: "Surrogate key única para la transacción de ingreso."
+        tests:
+          - unique
+          - not_null
+
+      - name: sk_user
+        data_type: varchar
+        description: "Clave foránea hacia dim_users."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_users')
+                field: sk_user
+
+      - name: sk_date
+        data_type: varchar
+        description: "Clave foránea hacia dim_date indicando cuándo se generó el ingreso."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_date')
+                field: sk_date
+
+      - name: sk_subscription
+        data_type: varchar
+        description: "Clave foránea hacia dim_plan_subscription (puede ser nula si el ingreso es de una orden regular)."
+        tests:
+          - relationships:
+              arguments:
+                to: ref('dim_plan_subscription')
+                field: sk_subscription
+
+      - name: payment_method
+        data_type: varchar
+        description: "Método de pago utilizado en la transacción."
+
+      - name: product_category
+        data_type: varchar
+        description: "Categoría del producto comprado o nombre del plan."
+
+      - name: source_id
+        data_type: number
+        description: "ID original de la orden o de la suscripción."
+        tests:
+          - not_null
+
+      - name: amount
+        data_type: number
+        description: "Monto total ingresado en la transacción."
+        tests:
+          - not_null
+        
+      - name: quantity
+        data_type: number
+        description: "Cantidad de items comprados (suele ser 1 para suscripciones)."
+        tests:
+          - not_null
+
+      - name: revenue_type
+        data_type: varchar
+        description: "Origen del ingreso: 'Order' o 'Subscription'."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Order', 'Subscription']
+
+      - name: is_refund
+        data_type: boolean
+        description: "Bandera que identifica si el registro es una devolución (TRUE) o un ingreso regular (FALSE)."
+        tests: 
+          - not_null
+
+  - name: fct_user_engagement
+    description: "Tabla de hechos que registra las actividades físicas y los entrenamientos realizados por los usuarios."
+    columns:
+      - name: sk_activity
+        data_type: varchar
+        description: "Surrogate key única para el registro de actividad física."
+        tests:
+          - unique
+          - not_null
+
+      - name: sk_user
+        data_type: varchar
+        description: "Clave foránea hacia dim_users."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_users')
+                field: sk_user
+
+      - name: sk_date
+        data_type: varchar
+        description: "Clave foránea hacia dim_date indicando la fecha de la actividad."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_date')
+                field: sk_date
+
+      - name: sk_subscription
+        data_type: varchar
+        description: "Clave foránea hacia dim_plan_subscription para saber el plan activo en el momento de la actividad."
+        tests: 
+          - relationships:
+              arguments:
+                to: ref('dim_plan_subscription')
+                field: sk_subscription
+
+      - name: activity_type
+        data_type: varchar
+        description: "Tipo de entrenamiento (ej. HIIT, Running, Yoga)."
+        tests: 
+          - not_null
+
+      - name: duration_minutes
+        data_type: number
+        description: "Duración de la actividad en minutos."
+        tests:
+          - not_null
+
+      - name: calories_burned
+        data_type: number
+        description: "Calorías quemadas durante la actividad."
+        tests:
+          - not_null
+
+  - name: fct_user_retention
+    description: "Tabla de hechos que registra los inicios de sesión de los usuarios para analizar retención y riesgo de churn."
+    columns:
+      - name: sk_session
+        data_type: varchar
+        description: "Surrogate key única para la sesión del usuario."
+        tests:
+          - unique
+          - not_null
+
+      - name: sk_user
+        data_type: varchar
+        description: "Clave foránea hacia dim_users."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_users')
+                field: sk_user
+
+      - name: sk_date
+        data_type: varchar
+        description: "Clave foránea hacia dim_date indicando la fecha del login."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_date')
+                field: sk_date
+
+      - name: sk_subscription
+        data_type: varchar
+        description: "Clave foránea hacia dim_plan_subscription. Puede ser nulo para orders."
+        tests:
+          - relationships:
+              arguments:
+                to: ref('dim_plan_subscription')
+                field: sk_subscription
+
+      - name: device_type
+        data_type: varchar
+        description: "Dispositivo desde el cual se inició la sesión."
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['Android', 'iOS', 'Web', 'Desktop']
+
+      - name: session_duration_seconds
+        data_type: number
+        description: "Duración de la sesión en segundos."
+        tests:
+          - not_null
+
+      - name: app_version
+        data_type: varchar
+        description: "Versión de la aplicación utilizada durante la sesión."
+        tests:
+          - not_null
+
+      - name: is_churned
+        data_type: boolean
+        description: "Indicador booleano que señala si el usuario se considera inactivo o en riesgo de abandono."
